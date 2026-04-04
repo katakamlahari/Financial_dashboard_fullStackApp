@@ -53,12 +53,30 @@ export class RecordController {
   getDashboardSummary = asyncHandler(
     async (req: AuthRequest, res: Response) => {
       const userId = req.user?.id;
-      const startDate = req.query.startDate
-        ? new Date(req.query.startDate as string)
-        : undefined;
-      const endDate = req.query.endDate
-        ? new Date(req.query.endDate as string)
-        : undefined;
+      
+      // FIXED: Validate dates with error handling
+      let startDate: Date | undefined;
+      let endDate: Date | undefined;
+      
+      if (req.query.startDate) {
+        startDate = new Date(req.query.startDate as string);
+        if (isNaN(startDate.getTime())) {
+          return res.status(400).json({
+            success: false,
+            error: 'Invalid startDate format',
+          });
+        }
+      }
+      
+      if (req.query.endDate) {
+        endDate = new Date(req.query.endDate as string);
+        if (isNaN(endDate.getTime())) {
+          return res.status(400).json({
+            success: false,
+            error: 'Invalid endDate format',
+          });
+        }
+      }
 
       const summary = await recordService.getDashboardSummary(
         userId!,

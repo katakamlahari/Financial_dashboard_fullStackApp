@@ -8,8 +8,20 @@ import {
 
 export class RecordService {
   async createRecord(userId: string, input: CreateFinancialRecordInput) {
-    const dateObj =
-      input.date instanceof Date ? input.date : new Date(input.date);
+    // FIXED: Ensure date is always ISO format
+    let dateObj: Date;
+    if (input.date instanceof Date) {
+      dateObj = input.date;
+    } else if (typeof input.date === 'string') {
+      dateObj = new Date(input.date);
+    } else {
+      dateObj = new Date();
+    }
+
+    // Validate date
+    if (isNaN(dateObj.getTime())) {
+      throw new Error('Invalid date provided');
+    }
 
     const record = await recordRepository.create({
       amount: input.amount,
@@ -20,7 +32,17 @@ export class RecordService {
       createdBy: userId,
     });
 
-    return record;
+    // Return with ISO formatted dates
+    return this.formatRecordDates(record);
+  }
+
+  private formatRecordDates(record: any) {
+    return {
+      ...record,
+      date: record.date instanceof Date ? record.date.toISOString() : record.date,
+      createdAt: record.createdAt instanceof Date ? record.createdAt.toISOString() : record.createdAt,
+      updatedAt: record.updatedAt instanceof Date ? record.updatedAt.toISOString() : record.updatedAt,
+    };
   }
 
   async getRecordById(recordId: string, userId: string) {

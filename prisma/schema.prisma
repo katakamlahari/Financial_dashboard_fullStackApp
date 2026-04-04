@@ -6,8 +6,11 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  // Railway recommends PostgreSQL for production
+  // For local development, use SQLite
+  provider = env("DATABASE_PROVIDER")
   url      = env("DATABASE_URL")
+  // After migration to PostgreSQL, change provider to: "postgresql"
 }
 
 model User {

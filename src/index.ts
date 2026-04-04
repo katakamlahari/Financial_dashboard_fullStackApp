@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 import dotenv from 'dotenv';
 import { swaggerSpec } from '@/config/swagger';
-import { errorHandler } from '@/middleware/error.middleware';
+import { errorHandler, asyncHandler } from '@/middleware/error.middleware';
 import userRoutes from '@/routes/user.routes';
 import recordRoutes from '@/routes/record.routes';
 import logger from '@/utils/logger';
@@ -12,16 +12,31 @@ import prisma from '@/utils/database';
 
 dotenv.config();
 
+// ==================== ENVIRONMENT VALIDATION ====================
+const requiredEnv = ['DATABASE_URL', 'JWT_SECRET', 'NODE_ENV'];
+const missingEnv = requiredEnv.filter((env) => !process.env[env]);
+if (missingEnv.length > 0) {
+  logger.error(`Missing environment variables: ${missingEnv.join(', ')}`);
+  process.exit(1);
+}
+
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = parseInt(process.env.PORT || '3000', 10);
 
 // ==================== Middleware ====================
 
-// CORS configuration
+// ==================== CORS CONFIGURATION ====================
+// Parse CORS_ORIGIN: supports single domain or comma-separated list
+const corsOrigin = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
+  : ['http://localhost:3000', 'http://localhost:5173'];
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'],
+    origin: process.env.NODE_ENV === 'production' ? corsOrigin : true,
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   }),
 );
 
@@ -39,14 +54,34 @@ app.use(
 // API Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Health check
+// ==================== HEALTH CHECK ====================
 app.get('/health', (req, res) => {
-  res.json({
+  res.status(200).json({
     status: 'ok',
     message: 'Server is running',
     timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV,
   });
 });
+
+// Database health check
+app.get('/health/db', asyncHandler(async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.status(200).json({
+      status: 'ok',
+      message: 'Database connection successful',
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'error',
+      message: 'Database connection failed',
+      timestamp: new Date().toISOString(),
+    });
+  }
+}));
 
 // API Routes
 app.use('/api/users', userRoutes);

@@ -8,12 +8,15 @@
     "dev": "tsx src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
+    "postinstall": "npx prisma generate",
     "migrate": "npx prisma migrate dev",
     "migrate:prod": "npx prisma migrate deploy",
+    "migrate:reset": "npx prisma migrate reset --force",
     "studio": "npx prisma studio",
     "seed": "node --loader ts-node/esm prisma/seed.ts",
     "lint": "eslint src --ext .ts",
-    "format": "prettier --write src/**/*.ts"
+    "format": "prettier --write src/**/*.ts",
+    "railway:deploy": "npm run build && npm run migrate:prod && npm start"
   },
   "keywords": [
     "finance",

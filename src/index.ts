@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
@@ -55,7 +55,7 @@ app.use(
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // ==================== HEALTH CHECK ====================
-app.get('/health', (req, res) => {
+app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({
     status: 'ok',
     message: 'Server is running',
@@ -66,7 +66,7 @@ app.get('/health', (req, res) => {
 });
 
 // Database health check
-app.get('/health/db', asyncHandler(async (req, res) => {
+app.get('/health/db', asyncHandler(async (req: Request, res: Response) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
     res.status(200).json({
@@ -88,7 +88,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/records', recordRoutes);
 
 // Root endpoint - Dashboard
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   res.send(`
     <!DOCTYPE html>
     <html lang="en">
@@ -323,7 +323,7 @@ app.get('/', (req, res) => {
 });
 
 // 404 handler
-app.use((req, res) => {
+app.use((req: Request, res: Response) => {
   res.status(404).json({
     success: false,
     error: {

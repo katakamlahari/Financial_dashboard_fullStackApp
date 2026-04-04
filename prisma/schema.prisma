@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  password  String
+  firstName String
+  lastName  String
+  role      String     @default("VIEWER")
+  isActive  Boolean    @default(true)
+  deletedAt DateTime?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  records   FinancialRecord[]
+
+  @@map("users")
+}
+
+model FinancialRecord {
+  id        String    @id @default(cuid())
+  amount    Float
+  type      String
+  category  String
+  date      DateTime
+  notes     String?
+  createdBy String
+  user      User      @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([createdBy])
+  @@index([date])
+  @@index([type])
+  @@index([category])
+  @@map("financial_records")
+}

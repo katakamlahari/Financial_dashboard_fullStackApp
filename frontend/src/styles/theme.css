@@ -1,0 +1,52 @@
+:root {
+  --color-primary: #667eea;
+  --color-secondary: #5568d3;
+  --color-light: #e0e7ff;
+  --color-dark: #312e81;
+}
+
+/* Primary color utilities */
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.border-primary {
+  border-color: var(--color-primary);
+}
+
+.ring-primary {
+  --tw-ring-color: var(--color-primary);
+}
+
+.hover\:bg-primary:hover {
+  background-color: var(--color-primary);
+}
+
+.focus\:ring-primary:focus {
+  --tw-ring-color: var(--color-primary);
+}
+
+/* Accent color for buttons and highlights */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Theme color cards */
+.card-primary {
+  border-left: 4px solid var(--color-primary);
+}
+
+/* Theme gradient */
+.gradient-primary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+}

@@ -1,0 +1,72 @@
+{
+  "name": "fintrackr-backend",
+  "version": "1.0.0",
+  "description": "FinTrackr Backend - Smart Financial Dashboard & Tracking Application",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "postinstall": "npx prisma generate",
+    "migrate": "npx prisma migrate dev",
+    "migrate:prod": "npx prisma migrate deploy",
+    "migrate:reset": "npx prisma migrate reset --force",
+    "studio": "npx prisma studio",
+    "seed": "node --loader ts-node/esm prisma/seed.ts",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write src/**/*.ts",
+    "railway:deploy": "npm run build && npm run migrate:prod && npm start"
+  },
+  "prisma": {
+    "seed": "node --loader ts-node/esm prisma/seed.ts"
+  },
+  "keywords": [
+    "finance",
+    "dashboard",
+    "backend",
+    "express",
+    "prisma"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.7.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "1.10.0",
+    "swagger-jsdoc": "6.2.8",
+    "swagger-ui-express": "5.0.0",
+    "zod": "3.22.4"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^20.10.6",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.6",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "eslint": "^8.50.0",
+    "prettier": "^3.1.1",
+    "prisma": "^5.7.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.3.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/katakamlahari/Financial_dashboard_fullStackApp.git"
+  },
+  "types": "./dist/index.d.ts",
+  "bugs": {
+    "url": "https://github.com/katakamlahari/Financial_dashboard_fullStackApp/issues"
+  },
+  "homepage": "https://github.com/katakamlahari/Financial_dashboard_fullStackApp#readme"
+}

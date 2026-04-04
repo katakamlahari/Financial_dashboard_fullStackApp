@@ -1,7 +1,7 @@
 {
-  "name": "finance-dashboard-backend",
+  "name": "fintrackr-backend",
   "version": "1.0.0",
-  "description": "Backend for Finance Dashboard Application",
+  "description": "FinTrackr Backend - Smart Financial Dashboard & Tracking Application",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -17,6 +17,9 @@
     "lint": "eslint src --ext .ts",
     "format": "prettier --write src/**/*.ts",
     "railway:deploy": "npm run build && npm run migrate:prod && npm start"
+  },
+  "prisma": {
+    "seed": "node --loader ts-node/esm prisma/seed.ts"
   },
   "keywords": [
     "finance",

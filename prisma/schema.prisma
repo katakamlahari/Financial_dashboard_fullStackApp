@@ -1,16 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  // Railway recommends PostgreSQL for production
-  // For local development, use SQLite
-  provider = env("DATABASE_PROVIDER")
+  provider = "postgresql"
   url      = env("DATABASE_URL")
-  // After migration to PostgreSQL, change provider to: "postgresql"
 }
 
 model User {
@@ -19,9 +13,9 @@ model User {
   password  String
   firstName String
   lastName  String
-  role      String     @default("VIEWER")  // ADMIN, ANALYST, VIEWER
+  role      String     @default("VIEWER")
   isActive  Boolean    @default(true)
-  deletedAt DateTime?  // Soft delete
+  deletedAt DateTime?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
@@ -33,13 +27,13 @@ model User {
 model FinancialRecord {
   id        String    @id @default(cuid())
   amount    Float
-  type      String    // INCOME or EXPENSE
+  type      String
   category  String
   date      DateTime
   notes     String?
   createdBy String
   user      User      @relation(fields: [createdBy], references: [id], onDelete: Cascade)
-  deletedAt DateTime? // Soft delete
+  deletedAt DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 

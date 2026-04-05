@@ -13,10 +13,20 @@ import prisma from '@/utils/database';
 dotenv.config();
 
 // ==================== ENVIRONMENT VALIDATION ====================
-const requiredEnv = ['DATABASE_URL', 'JWT_SECRET', 'NODE_ENV'];
+// In Railway, only DATABASE_URL and JWT_SECRET are required
+const requiredEnv = ['DATABASE_URL', 'JWT_SECRET'];
 const missingEnv = requiredEnv.filter((env) => !process.env[env]);
+
 if (missingEnv.length > 0) {
-  logger.error(`Missing environment variables: ${missingEnv.join(', ')}`);
+  logger.error(`Missing required environment variables: ${missingEnv.join(', ')}`);
+  logger.error('');
+  logger.error('🚀 Railway Setup Instructions:');
+  logger.error('1. Go to: railway.app → Your Project → Variables');
+  logger.error('2. Add PostgreSQL Database (if not already added)');
+  logger.error('3. Railway will auto-provide DATABASE_URL');
+  logger.error('4. Set JWT_SECRET to a random 32-character string');
+  logger.error('5. Redeploy by pushing to main branch');
+  logger.error('');
   process.exit(1);
 }
 

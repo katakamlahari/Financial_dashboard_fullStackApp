@@ -5,6 +5,7 @@ import {
   UpdateFinancialRecordInput,
   FilterRecordsInput,
 } from '@/schemas/record.schema';
+import { FinancialRecord } from '@prisma/client';
 
 export class RecordService {
   async createRecord(userId: string, input: CreateFinancialRecordInput) {
@@ -217,28 +218,28 @@ export class RecordService {
     ]);
 
     const currentMonthExpense = currentMonth
-      .filter(r => r.type === 'EXPENSE')
-      .reduce((sum, r) => sum + r.amount, 0);
+      .filter((r: FinancialRecord) => r.type === 'EXPENSE')
+      .reduce((sum: number, r: FinancialRecord) => sum + r.amount, 0);
     const currentMonthIncome = currentMonth
-      .filter(r => r.type === 'INCOME')
-      .reduce((sum, r) => sum + r.amount, 0);
+      .filter((r: FinancialRecord) => r.type === 'INCOME')
+      .reduce((sum: number, r: FinancialRecord) => sum + r.amount, 0);
 
     const lastMonthExpense = lastMonth
-      .filter(r => r.type === 'EXPENSE')
-      .reduce((sum, r) => sum + r.amount, 0);
+      .filter((r: FinancialRecord) => r.type === 'EXPENSE')
+      .reduce((sum: number, r: FinancialRecord) => sum + r.amount, 0);
     const lastMonthIncome = lastMonth
-      .filter(r => r.type === 'INCOME')
-      .reduce((sum, r) => sum + r.amount, 0);
+      .filter((r: FinancialRecord) => r.type === 'INCOME')
+      .reduce((sum: number, r: FinancialRecord) => sum + r.amount, 0);
 
     const totalExpense = allRecords
-      .filter(r => r.type === 'EXPENSE')
-      .reduce((sum, r) => sum + r.amount, 0);
+      .filter((r: FinancialRecord) => r.type === 'EXPENSE')
+      .reduce((sum: number, r: FinancialRecord) => sum + r.amount, 0);
     const totalRecords = allRecords.length;
 
     const categorySpending: { [key: string]: number } = {};
     currentMonth
-      .filter(r => r.type === 'EXPENSE')
-      .forEach(r => {
+      .filter((r: FinancialRecord) => r.type === 'EXPENSE')
+      .forEach((r: FinancialRecord) => {
         categorySpending[r.category] = (categorySpending[r.category] || 0) + r.amount;
       });
 

@@ -241,7 +241,7 @@ export class FinancialRecordRepository {
 
     const trends: Record<string, { income: number; expense: number }> = {};
 
-    records.forEach((record) => {
+    records.forEach((record: any) => {
       const yearMonth = record.date.toISOString().slice(0, 7);
       if (!trends[yearMonth]) {
         trends[yearMonth] = { income: 0, expense: 0 };
